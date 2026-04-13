@@ -1,0 +1,52 @@
+{
+  "name": "@internetmatt/gitflow-guard",
+  "version": "1.0.0",
+  "description": "GitFlow branch enforcement, hook orchestration, and commit journaling for monorepos",
+  "type": "module",
+  "bin": {
+    "gitflow-guard": "./bin/gitflow-guard.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./hooks/*": "./hooks/*",
+    "./presets/*": "./presets/*"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "lib/",
+    "presets/",
+    "src/",
+    ".github/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "test": "node --test src/**/*.test.mjs",
+    "lint": "eslint src/ bin/",
+    "prepublishOnly": "node bin/gitflow-guard.mjs --version",
+    "publish:npm": "npm publish --registry=URL:4873",
+    "publish:git": "npm publish --registry=URL/api/packages/internetmatt/npm/"
+  },
+  "keywords": [
+    "git",
+    "hooks",
+    "gitflow",
+    "branch-guard",
+    "pre-commit",
+    "pre-push",
+    "monorepo",
+    "nx",
+    "conventional-commits"
+  ],
+  "author": "internetmatt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/internetmatt/gitflow-guard.git"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
