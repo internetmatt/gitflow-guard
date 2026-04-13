@@ -108,12 +108,12 @@ Edit `.gitflow-guard.json` in the repo root. Key options:
         "triggerPath": "/triage",
         "skillCommand": "pnpm run skills:execute gitflow-events --json-params"
       },
-      "project": {
+      "custom-orchestrator": {
         "enabled": true,
-        "url": "http://localhost:4715/api/orchestrator",
+        "url": "http://localhost:8080/api/automation",
         "eventPath": "/events",
         "triggerPath": "/triage",
-        "skillCommand": "pnpm run skills:execute project-runtime-gitflow-orchestrator --json-params"
+        "skillCommand": "pnpm run skills:execute custom-gitflow-automation --json-params"
       }
     }
   },
@@ -123,6 +123,25 @@ Edit `.gitflow-guard.json` in the repo root. Key options:
   },
   "prePush": {
     "driftCheck": { "enabled": true, "script": "pnpm run drift:check" }
+  }
+}
+```
+
+Optional Projecto profile entry:
+
+```json
+{
+  "automation": {
+    "profile": "projecto",
+    "profiles": {
+      "projecto": {
+        "enabled": true,
+        "url": "http://localhost:4715/api/orchestrator",
+        "eventPath": "/events",
+        "triggerPath": "/triage",
+        "skillCommand": "pnpm run skills:execute projecto-runtime-gitflow-orchestrator --json-params"
+      }
+    }
   }
 }
 ```
@@ -170,6 +189,19 @@ release/* ← dev, hotfix/*
 - **Push blocked**: `gitflow-guard check-push`; bypass drift with `GITFLOW_GUARD_DRIFT_CHECK=0 git push`
 - **Branch rejected**: `gitflow-guard check-branch`; bypass with `GITFLOW_STRICT=0`
 - **Lint fails on unchecked-out files**: Ensure sparse checkout is set — hooks auto-detect the cone
+
+## Verify Commits On GitHub
+
+```bash
+git push -u origin "$(git branch --show-current)"
+LOCAL_SHA=$(git rev-parse HEAD)
+REMOTE_SHA=$(git ls-remote --heads origin "$(git branch --show-current)" | awk '{print $1}')
+test "$LOCAL_SHA" = "$REMOTE_SHA" && echo "sha-match"
+
+OWNER_REPO=$(git remote get-url origin | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')
+SHA=$(git rev-parse HEAD)
+gh api "repos/${OWNER_REPO}/commits/${SHA}" --jq '.commit.verification'
+```
 
 ## Verify CLI Commit In GitHub
 

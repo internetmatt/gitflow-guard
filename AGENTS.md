@@ -33,3 +33,16 @@ Branch names `claude/*`, `copilot/*`, and `codex/*` are always allowed by branch
 | `gitflow-guard check-branch` | Validate branch name |
 | `gitflow-guard check-push` | Dry-run push policy |
 | `gitflow-guard remove` | Uninstall hooks |
+
+## Verify CLI Commits On GitHub
+
+```bash
+git push -u origin "$(git branch --show-current)"
+LOCAL_SHA=$(git rev-parse HEAD)
+REMOTE_SHA=$(git ls-remote --heads origin "$(git branch --show-current)" | awk '{print $1}')
+test "$LOCAL_SHA" = "$REMOTE_SHA" && echo "sha-match"
+
+OWNER_REPO=$(git remote get-url origin | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')
+SHA=$(git rev-parse HEAD)
+gh api "repos/${OWNER_REPO}/commits/${SHA}" --jq '.commit.verification'
+```
