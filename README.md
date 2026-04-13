@@ -10,7 +10,7 @@ GitFlow branch enforcement, hook orchestration, and commit journaling for monore
 - **Auto-pull on checkout** — fast-forwards protected branches (`main`, `dev`, `release/*`) on checkout
 - **Conventional commit prefixing** — auto-detects commit type and scope from staged files
 - **Automation integration** — fires commit/merge events to any automation endpoint or local skill command
-- **Configurable presets** — ships with `standard`, `projects`, and `minimal` presets 
+- **Configurable presets** — ships with `standard`, `projects`, and `minimal` presets (`projecto` alias kept for compatibility)
 
 ## Install
 
@@ -37,7 +37,7 @@ gitflow-guard installs as the first block in each hook and then chains to whatev
 - `post-*` and `prepare-commit-msg` remain non-blocking (`|| true` behavior)
 - Re-running `gitflow-guard init` reorders existing managed blocks to the top if needed
 
-Recommended rollout order for mixed environments (`Projects`, `Prd`, `Vault`):
+Recommended rollout order for mixed environments (`Projects`, `Projecto`, `vault`):
 
 1. Install gitflow-guard first in each repo.
 2. Reinstall/refresh your repo-local hook installers after that.
@@ -47,15 +47,19 @@ Example:
 
 ```bash
 # Projects repo
-cd ~/Projects
+cd /Volumes/MIO/Projects
 gitflow-guard init --preset projects
+
+# Existing repo using compat alias
+cd /Volumes/MIO/Projecto
+gitflow-guard init --preset projecto
 
 # Vault repo
 cd /path/to/vault
 gitflow-guard init --preset minimal
 ```
 
-If your repo has its own installer (for example `.projects/hooks/install-gitflow-hooks.sh`), run it after `gitflow-guard init` so custom runners/automation hooks remain chained behind gitflow-guard policy checks.
+If your repo has its own installer (for example `.projecto/hooks/install-gitflow-hooks.sh`), run it after `gitflow-guard init` so custom runners/automation hooks remain chained behind gitflow-guard policy checks.
 
 ## Commands
 
@@ -103,12 +107,12 @@ Create `.gitflow-guard.json` in your repo root (auto-created by `init`):
         "triggerPath": "/triage",
         "skillCommand": "pnpm run skills:execute gitflow-events --json-params"
       },
-      "project": {
+      "projecto": {
         "enabled": true,
         "url": "http://localhost:4715/api/orchestrator",
         "eventPath": "/events",
         "triggerPath": "/triage",
-        "skillCommand": "pnpm run skills:execute project-runtime-gitflow-orchestrator --json-params"
+        "skillCommand": "pnpm run skills:execute projecto-runtime-gitflow-orchestrator --json-params"
       }
     }
   },
@@ -139,7 +143,7 @@ Create `.gitflow-guard.json` in your repo root (auto-created by `init`):
 ### `standard` (default)
 Full hook suite with commit journaling to `Vault/Gitflow`, generic automation integration, SQL boundary checks, and conventional commit prefixing.
 
-### `project` (compat alias)
+### `projecto` (compat alias)
 Alias of `standard`. Use this only when migrating existing repositories.
 
 ### `projects`

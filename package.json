@@ -26,8 +26,8 @@
     "test": "node --test src/**/*.test.mjs",
     "lint": "eslint src/ bin/",
     "prepublishOnly": "node bin/gitflow-guard.mjs --version",
-    "publish:npm": "npm publish --registry=URL:4873",
-    "publish:git": "npm publish --registry=URL/api/packages/internetmatt/npm/"
+    "publish:npm": "npm publish --registry=https://registry.npmjs.org/",
+    "publish:git": "npm publish --registry=https://npm.pkg.github.com/"
   },
   "keywords": [
     "git",

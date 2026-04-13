@@ -106,6 +106,12 @@ const BUILTIN_PRESETS = {
   },
 };
 
+// Legacy alias kept for backward compatibility with existing configs/scripts.
+BUILTIN_PRESETS.projecto = {
+  ...BUILTIN_PRESETS.standard,
+  preset: "projecto",
+};
+
 export function loadPreset(name) {
   if (BUILTIN_PRESETS[name]) {
     return BUILTIN_PRESETS[name];

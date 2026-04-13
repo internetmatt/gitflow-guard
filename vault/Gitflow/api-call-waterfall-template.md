@@ -2,6 +2,11 @@
 
 Use this as a copy/paste template for documenting API call order by app boot and user navigation clicks.
 
+Companion specs:
+
+- Security audit runbook: [api-security-audit-spec.md](api-security-audit-spec.md)
+- Dotnet user secrets machine runbook: [dotnet-user-secrets-machine-spec.md](dotnet-user-secrets-machine-spec.md)
+
 ## 1) Mermaid Sequence Diagram (Primary Template)
 
 ```mermaid
