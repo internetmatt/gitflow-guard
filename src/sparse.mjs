@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { installHooks } from "./installer.mjs";
@@ -20,8 +20,7 @@ export function setupSparseCheckout(repoRoot, coneDirs) {
   }
 
   if (coneDirs.length > 0) {
-    const dirs = coneDirs.join(" ");
-    execSync(`git sparse-checkout set ${dirs}`, { cwd: repoRoot, stdio: "inherit" });
+    execFileSync("git", ["sparse-checkout", "set", ...coneDirs], { cwd: repoRoot, stdio: "inherit" });
     console.log(`[gitflow-guard] Sparse cone set to: ${coneDirs.join(", ")}`);
   }
 }
@@ -55,7 +54,7 @@ export function createAgentWorktree(repoRoot, worktreePath, coneDirs, presetName
     console.log(`[gitflow-guard] Worktree path already exists, using existing.`);
   } else {
     try {
-      execSync(`git worktree add --detach "${absPath}"`, { cwd: repoRoot, stdio: "inherit" });
+      execFileSync("git", ["worktree", "add", "--detach", absPath], { cwd: repoRoot, stdio: "inherit" });
     } catch (err) {
       console.error(`[gitflow-guard] Failed to create worktree: ${err.message}`);
       process.exit(1);
@@ -66,8 +65,7 @@ export function createAgentWorktree(repoRoot, worktreePath, coneDirs, presetName
   if (coneDirs && coneDirs.length > 0 && coneDirs[0] !== "") {
     try {
       execSync("git sparse-checkout init --cone", { cwd: absPath, stdio: "inherit" });
-      const dirs = coneDirs.join(" ");
-      execSync(`git sparse-checkout set ${dirs}`, { cwd: absPath, stdio: "inherit" });
+      execFileSync("git", ["sparse-checkout", "set", ...coneDirs], { cwd: absPath, stdio: "inherit" });
       console.log(`[gitflow-guard] Sparse cone: ${coneDirs.join(", ")}`);
     } catch (err) {
       console.warn(`[gitflow-guard] Sparse checkout setup warning: ${err.message}`);
