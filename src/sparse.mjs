@@ -20,8 +20,7 @@ export function setupSparseCheckout(repoRoot, coneDirs) {
   }
 
   if (coneDirs.length > 0) {
-    const dirs = coneDirs.join(" ");
-    execSync(`git sparse-checkout set ${dirs}`, { cwd: repoRoot, stdio: "inherit" });
+    execFileSync("git", ["sparse-checkout", "set", ...coneDirs], { cwd: repoRoot, stdio: "inherit" });
     console.log(`[gitflow-guard] Sparse cone set to: ${coneDirs.join(", ")}`);
   }
 }
@@ -66,8 +65,7 @@ export function createAgentWorktree(repoRoot, worktreePath, coneDirs, presetName
   if (coneDirs && coneDirs.length > 0 && coneDirs[0] !== "") {
     try {
       execSync("git sparse-checkout init --cone", { cwd: absPath, stdio: "inherit" });
-      const dirs = coneDirs.join(" ");
-      execSync(`git sparse-checkout set ${dirs}`, { cwd: absPath, stdio: "inherit" });
+      execFileSync("git", ["sparse-checkout", "set", ...coneDirs], { cwd: absPath, stdio: "inherit" });
       console.log(`[gitflow-guard] Sparse cone: ${coneDirs.join(", ")}`);
     } catch (err) {
       console.warn(`[gitflow-guard] Sparse checkout setup warning: ${err.message}`);
