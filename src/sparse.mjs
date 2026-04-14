@@ -1,4 +1,4 @@
-import { execSync, execFileSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { installHooks } from "./installer.mjs";
@@ -20,8 +20,7 @@ export function setupSparseCheckout(repoRoot, coneDirs) {
   }
 
   if (coneDirs.length > 0) {
-    const dirs = coneDirs.join(" ");
-    execSync(`git sparse-checkout set ${dirs}`, { cwd: repoRoot, stdio: "inherit" });
+    execFileSync("git", ["sparse-checkout", "set", ...coneDirs], { cwd: repoRoot, stdio: "inherit" });
     console.log(`[gitflow-guard] Sparse cone set to: ${coneDirs.join(", ")}`);
   }
 }
