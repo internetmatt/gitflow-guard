@@ -55,7 +55,7 @@ export function createAgentWorktree(repoRoot, worktreePath, coneDirs, presetName
     console.log(`[gitflow-guard] Worktree path already exists, using existing.`);
   } else {
     try {
-      execFileSync("git", ["worktree", "add", "--detach", absPath], { cwd: repoRoot, stdio: "inherit" });
+      execFileSync("git", ["worktree", "add", "--detach", "--", absPath], { cwd: repoRoot, stdio: "inherit" });
     } catch (err) {
       console.error(`[gitflow-guard] Failed to create worktree: ${err.message}`);
       process.exit(1);
